@@ -5,6 +5,7 @@ import com.emre.springjpademo.dtos.StudentDto;
 import com.emre.springjpademo.dtos.StudentUIDto;
 import com.emre.springjpademo.entities.Student;
 import com.emre.springjpademo.services.IStudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class StudentController implements IStudentController {
 
     @PostMapping(path = "")
     @Override
-    public StudentDto createStudent(@RequestBody StudentUIDto student) {
+    public StudentDto createStudent(@RequestBody @Valid StudentUIDto student) {
         return studentService.createStudent(student);
     }
 
