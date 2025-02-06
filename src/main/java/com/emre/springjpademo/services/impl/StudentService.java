@@ -42,7 +42,7 @@ public class StudentService implements IStudentService {
     @Override
     public StudentDto getStudentById(Integer id) {
         StudentDto studentDto = new StudentDto();
-      Optional<Student> studentDb = studentRepository.findById(id);
+      Optional<Student> studentDb = Optional.ofNullable(studentRepository.getStudentById(id));
       if (studentDb.isPresent()) {
           BeanUtils.copyProperties(studentDb.get(), studentDto);
           return studentDto;
@@ -52,7 +52,7 @@ public class StudentService implements IStudentService {
 
     @Override
     public List<StudentDto> getAllStudents() {
-        List<Student> students = studentRepository.findAll();
+        List<Student> students = studentRepository.getAllStudents();
         List<StudentDto> studentDtos = new ArrayList<>();
         for (Student student : students) {
             StudentDto studentDto = new StudentDto();
