@@ -16,21 +16,21 @@ import java.util.*;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> ValidationExceptionHandler(MethodArgumentNotValidException ex){
-//Validasyon hatalarını key value şekline formatlamak için Map oluşturduk
+    public ResponseEntity<ApiError> ValidationExceptionHandler(MethodArgumentNotValidException ex) {
+        //Validasyon hatalarını key value şekline formatlamak için Map oluşturduk
         //Bu sınıfı doldurup Api errore vereceğiz
         Map<String, List<String>> mappedErrors = new HashMap<>();
 
-        for(ObjectError objErrors:ex.getBindingResult().getAllErrors()){
+        for (ObjectError objErrors : ex.getBindingResult().getAllErrors()) {
             //hatanın fieldNameini al
-            String fieldName = ((FieldError)objErrors).getField();
+            String fieldName = ((FieldError) objErrors).getField();
             //hatanın detayını al fakat burada ilgili fieldName olabileceği için
             //öncelikle mapped i kontrol et eğer içerisinde var ise listeye ekle
-            if(mappedErrors.containsKey(fieldName)){
+            if (mappedErrors.containsKey(fieldName)) {
                 mappedErrors.put(fieldName, addItemToList(mappedErrors.get(fieldName), objErrors.getDefaultMessage()));
-            }else{
+            } else {
                 //hata ilk kez oluşturulacağı için fieldName ve yeni liste verilir
-                mappedErrors.put(fieldName,addItemToList(new ArrayList<>(),objErrors.getDefaultMessage()));
+                mappedErrors.put(fieldName, addItemToList(new ArrayList<>(), objErrors.getDefaultMessage()));
             }
         }
 
@@ -39,15 +39,15 @@ public class GlobalExceptionHandler {
     }
 
     //İçerisine liste ve itemi alır geriye itemi eklediği listeyi döner
-    private List<String> addItemToList(List<String> list, String item){
+    private List<String> addItemToList(List<String> list, String item) {
         list.add(item);
         return list;
     }
 
 
     //Clienta aşağıdaki tipte veri dönmemizi sağlar
-    private ApiError createApiError(Map<String, List<String>> errors) {
-        ApiError apiError = new ApiError();
+    private <T> ApiError<T> createApiError(T errors) {
+        ApiError<T> apiError = new ApiError<T>();
         apiError.setErrors(errors);
         apiError.setId(UUID.randomUUID().toString());
         apiError.setErrorTime(new Date());
@@ -57,11 +57,11 @@ public class GlobalExceptionHandler {
 
 
 /*
-* "id":"ftpy7e2idvtMDQA3E1XOWeNK",
-* "dateTime":"06-02-2025"
-*"errors":{
-* "firstName":["Firstname alanı boş geçilemez",
-* "En fazla 10 karakter olabilir",
-* "En az iki karakter olabilir"]
-* }
-* */
+ * "id":"ftpy7e2idvtMDQA3E1XOWeNK",
+ * "dateTime":"06-02-2025"
+ *"errors":{
+ * "firstName":["Firstname alanı boş geçilemez",
+ * "En fazla 10 karakter olabilir",
+ * "En az iki karakter olabilir"]
+ * }
+ * */
